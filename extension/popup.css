@@ -273,6 +273,18 @@ footer {
   color: #8de0bd;
 }
 
+.popup-actions a.disabled {
+  color: #f0c58f;
+  cursor: not-allowed;
+}
+
+.dashboard-warning:not([hidden]) {
+  display: block;
+  margin: -6px 0 10px;
+  color: #f0c58f;
+  font-size: 11px;
+}
+
 .popup-actions button.paused {
   border-color: #765536;
   color: #f0c58f;

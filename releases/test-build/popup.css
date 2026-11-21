@@ -1,0 +1,284 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 400px;
+  background: #0f1117;
+  color: #f5f5f5;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  padding: 22px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 25px;
+}
+
+header p {
+  color: #9ca3af;
+  font-size: 13px;
+  margin: 8px 0 0;
+}
+
+.status {
+  color: #34d399;
+  font-size: 12px;
+}
+
+.status.paused {
+  color: #e5b474;
+}
+
+.total-card {
+  background: linear-gradient(135deg, #242a3a, #192b35);
+  border: 1px solid #343e4e;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.total-card p {
+  color: #9ca3af;
+  font-size: 13px;
+  margin: 0;
+}
+
+.total-card h2 {
+  margin: 12px 0 8px;
+  font-size: 44px;
+}
+
+.total-card span {
+  color: #aab6c7;
+  font-size: 13px;
+}
+
+.time-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #172b2b;
+  border: 1px solid #245448;
+  border-radius: 14px;
+  padding: 17px 19px;
+  margin-top: 12px;
+}
+
+.eyebrow {
+  color: #86cdb4;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+.time-card h2 {
+  font-size: 30px;
+  margin: 8px 0 5px;
+}
+
+.muted {
+  color: #a5b8b2;
+  font-size: 11px;
+}
+
+.time-icon {
+  font-size: 35px;
+  color: #34d399;
+}
+
+.platform h3,
+.analytics-card h3 {
+  font-size: 15px;
+  margin: 22px 0 12px;
+}
+
+.platform-card,
+.analytics-card,
+.lifetime-card {
+  background: #191c25;
+  border: 1px solid #292d38;
+  border-radius: 13px;
+  padding: 15px;
+  margin-bottom: 11px;
+}
+
+.platform-name {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.platform-name span {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-top: 12px;
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.breakdown b {
+  color: #fff;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-heading h3 {
+  margin: 0;
+}
+
+.section-heading > span {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.weekly-chart {
+  height: 130px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 9px;
+  padding-top: 18px;
+  margin-top: 12px;
+}
+
+.chart-day {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 7px;
+}
+
+.bar-track {
+  height: 90px;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bar {
+  width: 70%;
+  min-height: 3px;
+  background: #4b83e6;
+  border-radius: 5px 5px 2px 2px;
+  transition: height 0.2s ease;
+}
+
+.bar.today {
+  background: #34d399;
+}
+
+.bar-count {
+  font-size: 10px;
+  color: #cbd5e1;
+}
+
+.day-label {
+  font-size: 10px;
+  color: #9ca3af;
+}
+
+.average-row {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #292d38;
+  padding-top: 12px;
+  margin-top: 12px;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.average-row strong {
+  color: #fff;
+}
+
+.lifetime-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lifetime-card div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.lifetime-card span {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.lifetime-card strong {
+  color: #fff;
+  font-size: 17px;
+}
+
+footer {
+  color: #9ca3af;
+  font-size: 10px;
+  margin-top: 18px;
+  text-align: center;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.popup-actions button,
+.popup-actions a {
+  border: 1px solid #343a48;
+  border-radius: 8px;
+  padding: 9px 11px;
+  background: #222733;
+  color: #e5e7eb;
+  font: inherit;
+  font-size: 11px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.popup-actions a {
+  color: #8de0bd;
+}
+
+.popup-actions button.paused {
+  border-color: #765536;
+  color: #f0c58f;
+}
+
+.popup-actions button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}

@@ -99,13 +99,15 @@
     <footer>
       <div class="popup-actions">
         <button id="trackingToggle" type="button" aria-pressed="false">Pause tracking</button>
-        <a href="http://localhost:3000" target="_blank" rel="noreferrer">Open dashboard ↗</a>
+        <a id="dashboardLink" target="_blank" rel="noreferrer">Open dashboard ↗</a>
       </div>
+      <span id="dashboardWarning" class="dashboard-warning" role="alert" hidden></span>
       <span>🔒 Your tracking data stays on this browser.</span>
     </footer>
 
   </main>
 
+  <script src="dashboard-config.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

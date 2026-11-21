@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BrainWeb</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <main class="container">
+
+    <header>
+      <div>
+        <h1>BrainWeb</h1>
+        <p>Understand your attention. Take control of your digital habits.</p>
+      </div>
+      <span id="trackingStatus" class="status">● Tracking</span>
+    </header>
+
+    <!-- Today's overview -->
+    <section class="total-card">
+      <p>Today's content viewed</p>
+      <h2 id="todayTotal">0</h2>
+      <span>Across X and LinkedIn</span>
+    </section>
+
+    <section class="time-card">
+      <div>
+        <span class="eyebrow">ACTIVE TIME TODAY</span>
+        <h2 id="todayActiveTime">0m</h2>
+        <span class="muted">Time on focused, recently active tabs</span>
+      </div>
+      <div class="time-icon">◷</div>
+    </section>
+
+    <!-- Today's platform breakdown -->
+    <section class="platform">
+      <h3>Today's platform breakdown</h3>
+
+      <div class="platform-card">
+        <div class="platform-name">
+          <strong>X</strong>
+          <span id="xPosts">0 posts</span>
+        </div>
+
+        <div class="breakdown">
+          <span>Videos: <b id="xVideos">0</b></span>
+          <span>Active time: <b id="xActiveTime">0m</b></span>
+        </div>
+      </div>
+
+      <div class="platform-card">
+        <div class="platform-name">
+          <strong>LinkedIn</strong>
+          <span id="linkedinPosts">0 posts</span>
+        </div>
+
+        <div class="breakdown">
+          <span>Videos: <b id="linkedinVideos">0</b></span>
+          <span>Active time: <b id="linkedinActiveTime">0m</b></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Weekly post analytics -->
+    <section class="analytics-card">
+      <div class="section-heading">
+        <h3>Last 7 days</h3>
+        <span id="weeklyTotal">0 viewed</span>
+      </div>
+
+      <div
+        id="weeklyChart"
+        class="weekly-chart"
+        aria-label="Content viewed over the last seven days">
+      </div>
+
+      <div class="average-row">
+        <span>Daily average</span>
+        <strong id="dailyAverage">0</strong>
+      </div>
+    </section>
+
+    <!-- Lifetime statistics -->
+    <section class="lifetime-card">
+      <div>
+        <span>Lifetime content viewed</span>
+        <strong id="lifetimeTotal">0</strong>
+      </div>
+
+      <div>
+        <span>Lifetime active time</span>
+        <strong id="lifetimeActiveTime">0m</strong>
+      </div>
+    </section>
+
+    <footer>
+      <div class="popup-actions">
+        <button id="trackingToggle" type="button" aria-pressed="false">Pause tracking</button>
+        <a href="http://localhost:3000" target="_blank" rel="noreferrer">Open dashboard ↗</a>
+      </div>
+      <span>🔒 Your tracking data stays on this browser.</span>
+    </footer>
+
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>

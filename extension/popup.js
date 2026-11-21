@@ -180,6 +180,74 @@ function renderTrackingState(enabled) {
   }
 }
 
+const dashboardLink = document.getElementById("dashboardLink");
+const dashboardWarning = document.getElementById("dashboardWarning");
+
+function showDashboardConfigurationWarning(message, error) {
+  dashboardLink?.removeAttribute("href");
+  dashboardLink?.setAttribute("aria-disabled", "true");
+  dashboardLink?.classList.add("disabled");
+
+  if (dashboardWarning) {
+    dashboardWarning.textContent = message;
+    dashboardWarning.hidden = false;
+  }
+
+  if (error) {
+    console.error("[BrainWeb] Dashboard configuration error:", error);
+  } else {
+    console.warn(`[BrainWeb] ${message}`);
+  }
+}
+
+if (dashboardLink) {
+  const config = globalThis.BRAINWEB_DASHBOARD_CONFIG;
+  let configuredUrl;
+
+  if (config?.environment === "development") {
+    if (typeof config.dashboardUrl !== "string" || !config.dashboardUrl.trim()) {
+      showDashboardConfigurationWarning(
+        "Development dashboard URL is missing. Set dashboardUrl in dashboard-config.js."
+      );
+    } else {
+      configuredUrl = config.dashboardUrl;
+    }
+  } else if (config?.environment === "production") {
+    if (typeof config.productionDashboardUrl !== "string" ||
+        !config.productionDashboardUrl.trim()) {
+      showDashboardConfigurationWarning(
+        "Production dashboard URL is missing. Set productionDashboardUrl in dashboard-config.js."
+      );
+    } else {
+      configuredUrl = config.productionDashboardUrl;
+    }
+  } else {
+    showDashboardConfigurationWarning(
+      "Set environment to development or production in dashboard-config.js."
+    );
+  }
+
+  if (configuredUrl) {
+    try {
+      const dashboardUrl = new URL(configuredUrl);
+      if (dashboardUrl.protocol !== "http:" && dashboardUrl.protocol !== "https:") {
+        throw new Error("Dashboard URL must use HTTP or HTTPS.");
+      }
+
+      dashboardUrl.searchParams.set("extensionId", chrome.runtime.id);
+      dashboardLink.href = dashboardUrl.toString();
+      dashboardLink.removeAttribute("aria-disabled");
+      dashboardLink.classList.remove("disabled");
+      if (dashboardWarning) dashboardWarning.hidden = true;
+    } catch (error) {
+      showDashboardConfigurationWarning(
+        "Dashboard URL is invalid. Check dashboard-config.js.",
+        error
+      );
+    }
+  }
+}
+
 function loadStats() {
   chrome.runtime.sendMessage(
     { type: "GET_STATS" },

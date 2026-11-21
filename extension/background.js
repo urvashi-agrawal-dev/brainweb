@@ -313,6 +313,47 @@ async function saveStats(stats, session) {
 
 
 /* ---------------------------------------------------------
+   8b. STORAGE INITIALIZATION
+--------------------------------------------------------- */
+
+// Runs once when the service worker starts.
+// Only missing keys are created; existing statistics,
+// tracking preferences, and sessions are preserved.
+
+async function initializeStorage() {
+  const result = await chrome.storage.local.get([
+    "stats",
+    "trackingEnabled",
+    "activeSession"
+  ]);
+
+  const updates = {};
+
+  if (result.stats === undefined) {
+    updates.stats = normalizeStats(DEFAULT_STATS);
+  }
+
+  if (result.trackingEnabled === undefined) {
+    updates.trackingEnabled = true;
+  }
+
+  if (result.activeSession === undefined) {
+    updates.activeSession = null;
+  }
+
+  if (Object.keys(updates).length > 0) {
+    await chrome.storage.local.set(updates);
+  }
+}
+
+// Enqueued before any listeners are registered, so it
+// completes before tracking events or dashboard requests
+// are processed by the serial update queue.
+
+enqueue(initializeStorage);
+
+
+/* ---------------------------------------------------------
    9. ACTIVE TIME — DATE-AWARE TRACKING
 --------------------------------------------------------- */
 
@@ -975,17 +1016,24 @@ console.log("[BrainWeb] Session manager started.");
    20. DASHBOARD EXTERNAL CONNECTION
 --------------------------------------------------------- */
 
-// The dashboard can request statistics through:
-//
-// chrome.runtime.sendMessage(
-//   "YOUR_EXTENSION_ID",
-//   { type: "GET_DASHBOARD_STATS" },
-//   callback
-// )
-//
-// Only localhost:3000 is allowed here.
-// Add your production dashboard origin separately
-// when you deploy it.
+importScripts("dashboard-config.js");
+
+const dashboardOrigins = new Set([
+  "http://localhost:3000",
+  ...(globalThis.BRAINWEB_DASHBOARD_CONFIG.productionDashboardUrl
+    ? [new URL(globalThis.BRAINWEB_DASHBOARD_CONFIG.productionDashboardUrl).origin]
+    : [])
+]);
+
+function isRecord(value) {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function hasExactKeys(value, keys) {
+  return isRecord(value) &&
+    Object.keys(value).length === keys.length &&
+    keys.every(key => Object.prototype.hasOwnProperty.call(value, key));
+}
 
 chrome.runtime.onMessageExternal.addListener(
   (message, sender, sendResponse) => {
@@ -993,6 +1041,9 @@ chrome.runtime.onMessageExternal.addListener(
     let senderOrigin;
 
     try {
+      if (typeof sender.url !== "string") {
+        throw new Error("Missing sender URL");
+      }
       senderOrigin = new URL(sender.url).origin;
     } catch {
       sendResponse({
@@ -1003,9 +1054,7 @@ chrome.runtime.onMessageExternal.addListener(
       return;
     }
 
-
-    // Origin validation.
-    if (senderOrigin !== "http://localhost:3000") {
+    if (!dashboardOrigins.has(senderOrigin)) {
       sendResponse({
         success: false,
         error: "Origin not allowed"
@@ -1014,8 +1063,7 @@ chrome.runtime.onMessageExternal.addListener(
       return;
     }
 
-
-    if (!message || typeof message.type !== "string") {
+    if (!isRecord(message) || typeof message.type !== "string") {
       sendResponse({
         success: false,
         error: "Invalid message"
@@ -1024,9 +1072,12 @@ chrome.runtime.onMessageExternal.addListener(
       return;
     }
 
-
-    // Dashboard requests statistics.
     if (message.type === "GET_DASHBOARD_STATS") {
+      if (!hasExactKeys(message, ["type"])) {
+        sendResponse({ success: false, error: "Invalid message" });
+        return;
+      }
+
       enqueue(async () => {
         const { stats, session, trackingEnabled } = await readState();
 
@@ -1055,6 +1106,12 @@ chrome.runtime.onMessageExternal.addListener(
     }
 
     if (message.type === "SET_TRACKING") {
+      if (!hasExactKeys(message, ["type", "enabled"]) ||
+          typeof message.enabled !== "boolean") {
+        sendResponse({ success: false, error: "Invalid message" });
+        return;
+      }
+
       enqueue(
         () => setTrackingEnabled(message.enabled)
       ).then(
@@ -1072,6 +1129,11 @@ chrome.runtime.onMessageExternal.addListener(
     }
 
     if (message.type === "CLEAR_ANALYTICS") {
+      if (!hasExactKeys(message, ["type"])) {
+        sendResponse({ success: false, error: "Invalid message" });
+        return;
+      }
+
       enqueue(clearAnalytics).then(
         result => sendResponse({
           success: true,
